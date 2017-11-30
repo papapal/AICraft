@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class Selectable : MonoBehaviour
 {
-
+    virtual public void SetNewTarget(Vector3 aPosition)
+    {
+        
+    }
 }

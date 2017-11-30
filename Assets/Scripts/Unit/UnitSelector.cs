@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,19 +31,29 @@ public class UnitSelector : MonoBehaviour {
 
             if(Physics.Raycast(ray, out hit, rayCastDistance))
             {
-                Selectable selectable =  hit.transform.gameObject.GetComponent<Selectable>();
+                Selectable selectable = hit.transform.gameObject.GetComponent<Selectable>();
                 if(selectable != null)
                 {
                     listSelection.Add(selectable);
                     AttachUnitGroundSelector();
                 }
+            }
+        }
+        if(Input.GetMouseButtonDown(1))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if(Physics.Raycast(ray, out hit, rayCastDistance))
+            {
+                //TODO Handle other unit or building
+                SendSelectionTo(hit.point);
 
             }
         }
     }
 
     //TODO Use a pooling system to optimize
-    void ReleaseUnitGroundSelector()
+    private void ReleaseUnitGroundSelector()
     {
         for(int i = 0; i < listSelectionGroundFX.Count; i++)
         {
@@ -51,7 +62,7 @@ public class UnitSelector : MonoBehaviour {
         listSelectionGroundFX.Clear();
     }
 
-    void AttachUnitGroundSelector()
+    private void AttachUnitGroundSelector()
     {
         for(int i = 0; i < listSelection.Count; i++)
         {
@@ -59,4 +70,14 @@ public class UnitSelector : MonoBehaviour {
             listSelectionGroundFX.Add(fx);
         }
     }
+
+    private void SendSelectionTo(Vector3 aPosition)
+    {
+        for(int i = 0; i < listSelection.Count; i++)
+        {
+            listSelection[i].SetNewTarget(aPosition);
+        }
+    }
+
 }
+
